@@ -78,10 +78,11 @@ class DataTransformation:
             # Transform features using preprocessor
             input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df).toarray()
             input_feature_test_arr = preprocessing_obj.transform(input_feature_test_df).toarray()
-
             # Concatenate features and targets into arrays
-            train_arr = np.hstack((input_feature_train_arr, np.array(target_feature_train_df).reshape(-1, 1)))
-            test_arr = np.hstack((input_feature_test_arr, np.array(target_feature_test_df).reshape(-1, 1)))
+            train_arr = pd.DataFrame(input_feature_train_arr)
+            train_arr['sentiment']=target_feature_train_df
+            test_arr = pd.DataFrame(input_feature_test_arr)
+            test_arr['sentiment']=target_feature_test_df
 
             # Save preprocessing object
             save_object(file_path=self.data_transformation_config.preprocessor_obj_file_path,
