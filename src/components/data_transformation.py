@@ -38,10 +38,9 @@ class DataTransformation:
 
         return preprocessor
 
-    def data_conversion(self,df):
+    def feature_column_processer(self,df):
         stop_words = set(stopwords.words('english'))
         processed_texts = []
-        df.sentiment = df.sentiment.apply(lambda x: 2 if (x == 'positive') else (1 if x == 'neutral' else 0))
         for text in df['message']:
             tokens = wordpunct_tokenize(text.lower())
             filtered_tokens = [token for token in tokens if token not in stop_words]
@@ -49,6 +48,11 @@ class DataTransformation:
             processed_texts.append(processed_text)
 
         df['processed_text'] = pd.Series(processed_texts)
+
+    def target_column_processer(self,df):
+        df.sentiment = df.sentiment.apply(lambda x: 2 if (x == 'positive') else (1 if x == 'neutral' else 0))
+
+
     def initiate_data_transformation(self, train_path, test_path):
         try:
             # Read train and test data
@@ -58,8 +62,10 @@ class DataTransformation:
             logging.info("Read train and test data completed")
 
             # Perform text data conversion
-            self.data_conversion(train_df)
-            self.data_conversion(test_df)
+            self.feature_column_processer(train_df)
+            self.target_column_processer(train_df)
+            self.feature_column_processer(test_df)
+            self.target_column_processer(test_df)
 
             # Initialize preprocessing object
             preprocessing_obj = self.get_data_transformer_object()
