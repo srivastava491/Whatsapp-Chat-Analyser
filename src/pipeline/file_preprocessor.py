@@ -66,10 +66,8 @@ class FilePreprocesser:
             df['hour'] = df['date'].dt.hour
 
             df['minute'] = df['date'].dt.minute
-            try:
-                df['sentiment']=df['message'].apply(lambda x: predict_pipeline_obj.predict(message))
-            except Exception as e:
-                print(CustomException(e,sys))
+
+            df['sentiment']=df['message'].apply(lambda x: int(predict_pipeline_obj.predict(message)))
             period = []
 
             for hour in df[['day_name', 'hour']]['hour']:
@@ -88,7 +86,6 @@ class FilePreprocesser:
 
             df['period'] = period
             logging.info("Data Processing Completed")
-            print(df.head())
             return df
 
         except Exception as e:

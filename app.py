@@ -21,7 +21,10 @@ if uploaded_file is not None:
 
     # fetch unique users
     user_list = df['user'].unique().tolist()
-    user_list.remove('group_notification')
+    try:
+        user_list.remove('group_notification')
+    except Exception as e:
+        CustomException(e,sys)
     user_list.sort()
     user_list.insert(0,"Overall")
 
@@ -51,9 +54,27 @@ if uploaded_file is not None:
         st.title("Sentiment Analysis")
         col1,col2=st.columns(2)
         with col1:
-            st.header("Sentiment Overview")
-        with col1:
-            st.header("Sentiment Distribution")
+            st.header("Daily Sentiment Analysis")
+            sentiment_timeline=details_fetcher_obj.daily_sentiment_timeline(selected_user,df)
+            fig, ax = plt.subplots()
+            ax.plot(sentiment_timeline['only_date'], sentiment_timeline['sentiment'], color='green')
+
+            # Customize ticks and rotation
+            plt.xticks(rotation='vertical')
+            plt.yticks([2, 1, 0])
+
+            # Display the plot in Streamlit
+            st.pyplot(fig)
+
+        with col2:
+            st.header("Monthly Sentiment Analysis")
+            timeline = details_fetcher_obj.monthly_sentiment_timeline(selected_user, df)
+            fig, ax = plt.subplots()
+            ax.plot(timeline['time'], timeline['sentiment'], color='green')
+            plt.xticks(rotation='vertical')
+            plt.yticks([2, 1, 0])
+
+            st.pyplot(fig)
         # monthly timeline
         st.title("Monthly Timeline")
         timeline = details_fetcher_obj.monthly_timeline(selected_user,df)

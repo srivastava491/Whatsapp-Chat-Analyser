@@ -19,6 +19,10 @@ def get_requirements(file_path: str) -> List[str]:
     return requirements
 
 
+# def get_requirements(file_name):
+#     with open(file_name, encoding='utf-8') as file_obj:
+#         requirements = file_obj.readlines()
+#     return [req.strip() for req in requirements if req.strip() and not req.startswith('#')]
 setup(
     name='WhatsappChatAnalyser',
     version='0.0.1',
