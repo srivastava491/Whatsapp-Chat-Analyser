@@ -3,6 +3,7 @@ import pandas as pd
 from src.logger import logging
 from src.exceptions import CustomException
 import sys
+from src.pipeline.prediction_pipeline import PredictPipeline
 
 
 class FilePreprocesser:
@@ -15,7 +16,7 @@ class FilePreprocesser:
 
             messages = re.split(pattern, data)[1:]
             dates = re.findall(pattern, data)
-
+            predict_pipeline_obj = PredictPipeline()
             df = pd.DataFrame({'user_message': messages, 'message_date': dates})
 
             logging.info("Data processing started")
@@ -65,7 +66,10 @@ class FilePreprocesser:
             df['hour'] = df['date'].dt.hour
 
             df['minute'] = df['date'].dt.minute
-
+            try:
+                df['sentiment']=df['message'].apply(lambda x: predict_pipeline_obj.predict(message))
+            except Exception as e:
+                print(CustomException(e,sys))
             period = []
 
             for hour in df[['day_name', 'hour']]['hour']:
@@ -84,6 +88,7 @@ class FilePreprocesser:
 
             df['period'] = period
             logging.info("Data Processing Completed")
+            print(df.head())
             return df
 
         except Exception as e:

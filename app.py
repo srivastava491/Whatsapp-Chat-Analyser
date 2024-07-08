@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from src.exceptions import CustomException
 import sys
+import warnings
+warnings.simplefilter("ignore")
 
 st.sidebar.title("Whatsapp Chat Analyzer")
 
@@ -45,6 +47,13 @@ if uploaded_file is not None:
             st.header("Links Shared")
             st.title(num_links)
 
+
+        st.title("Sentiment Analysis")
+        col1,col2=st.columns(2)
+        with col1:
+            st.header("Sentiment Overview")
+        with col1:
+            st.header("Sentiment Distribution")
         # monthly timeline
         st.title("Monthly Timeline")
         timeline = details_fetcher_obj.monthly_timeline(selected_user,df)
