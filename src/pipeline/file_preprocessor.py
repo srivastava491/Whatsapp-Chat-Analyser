@@ -5,6 +5,7 @@ from src.exceptions import CustomException
 import sys
 from src.pipeline.prediction_pipeline import PredictPipeline
 
+
 class FilePreprocesser:
     def __init__(self):
         pass
